@@ -1,0 +1,32 @@
+{
+  "name": "betwin-backend",
+  "version": "1.0.0",
+  "description": "Soccer prediction",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "GOOGLE_APPLICATION_CREDENTIALS='/Users/abelkevin/Documents/DEV/projects/all-in-one-cmr-news/cmrnews-backend/service-account.json' node app.js",
+    "dev": "GOOGLE_APPLICATION_CREDENTIALS='/Users/abelkevin/Documents/DEV/projects/all-in-one-cmr-news/cmrnews-backend/service-account.json' nodemon app.js"
+  },
+  "keywords": [
+    "betwin prediction"
+  ],
+  "author": "kevin-it",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "firebase-admin": "^11.5.0",
+    "global": "^4.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.11",
+    "morgan": "^1.9.1",
+    "nodemailer": "^6.3.0",
+    "nodemon": "^2.0.15",
+    "request": "^2.88.0",
+    "uuid-v4": "^0.1.0"
+  }
+}
