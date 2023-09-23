@@ -57,13 +57,7 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
     .sort({ datetime: 1 })
     .exec()
     .then((posts) => {
-      if (posts.length === 0) {
-        return res.status(404).json({
-          message: "Posts not Found",
-        });
-      }
-
-      result.posts = posts;
+      result.items = posts;
       return res.status(200).json({
         message: "Posts fetched successfully",
         data: result,
