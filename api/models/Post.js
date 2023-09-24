@@ -5,7 +5,7 @@ const PostSchema = mongoose.Schema(
     _id: mongoose.Schema.Types.ObjectId,
     title: { type: String, required: false },
     title_en: { type: String, required: false },
-    link: { type: String, required: true },
+    news_link: { type: String, required: true },
     image: { type: String, required: true },
     author: { type: String, required: false },
     category: { type: String, required: false },

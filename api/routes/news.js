@@ -21,10 +21,10 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
 
   let fields = "";
   if (lang === "fr") {
-    fields = "title link image author category date datetime excerpt source";
+    fields = "title news_link image author category date datetime excerpt source";
   } else {
     fields =
-      "title_en link image author category_en date datetime excerpt_en source";
+      "title_en news_link image author category_en date datetime excerpt_en source";
       query = { category_en: category }
   }
 
@@ -87,10 +87,10 @@ router.get("/latest", authJwt.verifyToken, (req, res, next) => {
   let fields = "";
 
   if (lang === "fr") {
-    fields = "title link image author category date datetime excerpt source";
+    fields = "title news_link image author category date datetime excerpt source";
   } else {
     fields =
-      "title_en link image author category_en date datetime excerpt_en source";
+      "title_en news_link image author category_en date datetime excerpt_en source";
   }
 
   Post.find()
@@ -134,10 +134,10 @@ router.get("/:id", authJwt.verifyToken, async (req, res, next) => {
   let fields = "";
   if (lang === "fr") {
     fields =
-      "title link image author category content_summary date datetime excerpt md_content source updatedAt createdAt";
+      "title news_link image author category content_summary date datetime excerpt md_content source updatedAt createdAt";
   } else {
     fields =
-      "title_en link image author category_en content_summary_en date datetime excerpt_en md_content_en source updatedAt createdAt";
+      "title_en news_link image author category_en content_summary_en date datetime excerpt_en md_content_en source updatedAt createdAt";
   }
 
   Post.findById(id)
@@ -182,10 +182,10 @@ router.post("/search", authJwt.verifyToken, async (req, res, next) => {
 
   let fields = "";
   if (lang === "fr") {
-    fields = "title link image author category date datetime excerpt source";
+    fields = "title news_link image author category date datetime excerpt source";
   } else {
     fields =
-      "title_en link image author category_en date datetime excerpt_en source";
+      "title_en news_link image author category_en date datetime excerpt_en source";
   }
 
   let query = { $text: { $search: `"\"${queryData}\"` } }; // for phrase search
