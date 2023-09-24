@@ -7,7 +7,7 @@ const Post = require("../models/Post");
 router.get("/", authJwt.verifyToken, async (req, res, next) => {
   const category = req.query.category;
   const lang = req.query.lang;
-  let query = { category }
+  let query = { category };
 
   if (!lang)
     return res.status(403).json({
@@ -21,11 +21,12 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
 
   let fields = "";
   if (lang === "fr") {
-    fields = "title news_link image author category date datetime excerpt source";
+    fields =
+      "title news_link image author category date datetime excerpt source";
   } else {
     fields =
       "title_en news_link image author category_en date datetime excerpt_en source";
-      query = { category_en: category }
+    query = { category_en: category };
   }
 
   const page = parseInt(req.query.page) || 0;
@@ -87,7 +88,8 @@ router.get("/latest", authJwt.verifyToken, (req, res, next) => {
   let fields = "";
 
   if (lang === "fr") {
-    fields = "title news_link image author category date datetime excerpt source";
+    fields =
+      "title news_link image author category date datetime excerpt source";
   } else {
     fields =
       "title_en news_link image author category_en date datetime excerpt_en source";
@@ -111,7 +113,7 @@ router.get("/latest", authJwt.verifyToken, (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log({err})
+      console.log({ err });
       return res.status(500).json({ error: err });
     });
 });
@@ -131,14 +133,9 @@ router.get("/:id", authJwt.verifyToken, async (req, res, next) => {
       message: "Language should be 'fr' or 'en",
     });
 
-  let fields = "";
-  if (lang === "fr") {
-    fields =
-      "title news_link image author category content_summary date datetime excerpt md_content source updatedAt createdAt";
-  } else {
-    fields =
-      "title_en news_link image author category_en content_summary_en date datetime excerpt_en md_content_en source updatedAt createdAt";
-  }
+  // return english and french version
+  let fields =
+    "title title_en news_link image author category_en category content_summary content_summary_en date datetime excerpt excerpt_en md_content md_content_en source updatedAt createdAt";
 
   Post.findById(id)
     .select(fields)
@@ -182,14 +179,15 @@ router.post("/search", authJwt.verifyToken, async (req, res, next) => {
 
   let fields = "";
   if (lang === "fr") {
-    fields = "title news_link image author category date datetime excerpt source";
+    fields =
+      "title news_link image author category date datetime excerpt source";
   } else {
     fields =
       "title_en news_link image author category_en date datetime excerpt_en source";
   }
 
   let query = { $text: { $search: `"\"${queryData}\"` } }; // for phrase search
-  if(queryData && queryData.split(" ").length === 1) {
+  if (queryData && queryData.split(" ").length === 1) {
     query = { $text: { $search: queryData } }; // for single word search
   }
 
