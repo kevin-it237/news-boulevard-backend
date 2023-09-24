@@ -7,6 +7,7 @@ const Post = require("../models/Post");
 router.get("/", authJwt.verifyToken, async (req, res, next) => {
   const category = req.query.category;
   const lang = req.query.lang;
+  let query = { category }
 
   if (!lang)
     return res.status(403).json({
@@ -24,6 +25,7 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
   } else {
     fields =
       "title_en link image author category_en date datetime excerpt_en source";
+      query = { category_en: category }
   }
 
   const page = parseInt(req.query.page) || 0;
@@ -50,7 +52,7 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
     };
   }
 
-  Post.find()
+  Post.find(category ? query : {})
     .select(fields)
     .skip(startIndex)
     .limit(limit)
@@ -64,6 +66,52 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
       });
     })
     .catch((err) => {
+      return res.status(500).json({ error: err });
+    });
+});
+
+// Get top 10 latest news with pagination
+router.get("/latest", authJwt.verifyToken, (req, res, next) => {
+  const lang = req.query.lang;
+
+  if (!lang)
+    return res.status(403).json({
+      message: "Lang is missing on query parameters",
+    });
+
+  if (!["fr", "en"].includes(lang))
+    return res.status(403).json({
+      message: "Language should be 'fr' or 'en",
+    });
+
+  let fields = "";
+
+  if (lang === "fr") {
+    fields = "title link image author category date datetime excerpt source";
+  } else {
+    fields =
+      "title_en link image author category_en date datetime excerpt_en source";
+  }
+
+  Post.find()
+    .select(fields)
+    .sort({ datetime: 1 })
+    .limit(10)
+    .exec()
+    .then((posts) => {
+      if (posts.length === 0) {
+        return res.status(404).json({
+          message: "Posts not Found",
+        });
+      }
+
+      return res.status(200).json({
+        message: "Posts fetched successfully",
+        data: posts,
+      });
+    })
+    .catch((err) => {
+      console.log({err})
       return res.status(500).json({ error: err });
     });
 });
@@ -112,52 +160,6 @@ router.get("/:id", authJwt.verifyToken, async (req, res, next) => {
     });
 });
 
-// Get top 10 latest news with pagination
-router.get("/latest", authJwt.verifyToken, (req, res, next) => {
-  const lang = req.query.lang;
-
-  if (!lang)
-    return res.status(403).json({
-      message: "Lang is missing on query parameters",
-    });
-
-  if (!["fr", "en"].includes(lang))
-    return res.status(403).json({
-      message: "Language should be 'fr' or 'en",
-    });
-
-  let query = {};
-  let fields = "";
-
-  if (lang === "fr") {
-    fields = "title link image author category date datetime excerpt source";
-  } else {
-    fields =
-      "title_en link image author category_en date datetime excerpt_en source";
-  }
-
-  Post.find(query)
-    .select(fields)
-    .sort({ datetime: 1 })
-    .limit(10)
-    .exec()
-    .then((posts) => {
-      if (posts.length === 0) {
-        return res.status(404).json({
-          message: "Posts not Found",
-        });
-      }
-
-      return res.status(200).json({
-        message: "Posts fetched successfully",
-        data: posts,
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({ error: err });
-    });
-});
-
 // Get news
 router.post("/search", authJwt.verifyToken, async (req, res, next) => {
   const lang = req.query.lang;
@@ -186,7 +188,10 @@ router.post("/search", authJwt.verifyToken, async (req, res, next) => {
       "title_en link image author category_en date datetime excerpt_en source";
   }
 
-  const query = { $text: { $search: `"\"${queryData}\"` } };
+  let query = { $text: { $search: `"\"${queryData}\"` } }; // for phrase search
+  if(queryData && queryData.split(" ").length === 1) {
+    query = { $text: { $search: queryData } }; // for single word search
+  }
 
   await Post.find(query)
     .select(fields)
