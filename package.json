@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "GOOGLE_APPLICATION_CREDENTIALS='/Users/abelkevin/Documents/DEV/projects/all-in-one-cmr-news/cmrnews-backend/service-account.json' node app.js",
-    "dev": "GOOGLE_APPLICATION_CREDENTIALS='/Users/abelkevin/Documents/DEV/projects/all-in-one-cmr-news/cmrnews-backend/service-account.json' nodemon app.js"
+    "dev": "GOOGLE_APPLICATION_CREDENTIALS='/Users/abel.ngaleu/Documents/projects/news-boulevard-backend/service-account.json' nodemon app.js"
   },
   "keywords": [
     "betwin prediction"
@@ -21,7 +21,7 @@
     "express-session": "^1.17.0",
     "firebase-admin": "^11.5.0",
     "global": "^4.4.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^5.6.11",
     "morgan": "^1.9.1",
     "nodemailer": "^6.3.0",
