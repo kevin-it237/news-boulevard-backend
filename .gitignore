@@ -1,5 +1,5 @@
 node_modules
 uploads/images/*
 !uploads/images/.gitkeep
-betwin-app.pem
+newsboulevard-server-key.pem
 service-account.json
