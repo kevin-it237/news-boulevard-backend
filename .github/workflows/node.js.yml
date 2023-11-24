@@ -27,5 +27,5 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: NODE_ENV=production GOOGLE_APPLICATION_CREDENTIALS=/home/ubuntu/service-account.json
-    - run: pm2 delete all
-    - run: pm2 start /home/ubuntu/actions-runner/app/news-boulevard-backend/news-boulevard-backend/app.js --name news-backend
+    - run: pm2 del --silent news-backend || ':'
+    - run: pm2 start /home/ubuntu/actions-runner/app/news-boulevard-backend/news-boulevard-backend/app.js --name=news-backend
