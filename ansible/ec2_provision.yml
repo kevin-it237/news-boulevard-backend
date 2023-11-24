@@ -4,7 +4,7 @@
   become: true
   become_method: sudo
   vars:
-    app_source_directory: "/home/ubuntu/your/node/app"  # Replace with your Node.js app directory
+    app_source_directory: "/home/ubuntu/actions-runner/app/news-boulevard-backend/news-boulevard-backend"  # Replace with your Node.js app directory
     node_env: "production"
     google_application_credentials: "/home/ubuntu/service-account.json"
 
@@ -36,14 +36,13 @@
         name: pm2
         global: yes
 
-    - name: Set env variable
-      shell:
-        cmd: |
-        export NODE_ENV="{{ node_env }}"
-        export GOOGLE_APPLICATION_CREDENTIALS="{{ google_application_credentials }}"
-      args:
-        executable: /bin/bash
-      become: false
+    - name: Set environment variables in /etc/environment
+      lineinfile:
+        path: /etc/environment
+        line: |
+          NODE_ENV="{{ node_env }}"
+          GOOGLE_APPLICATION_CREDENTIALS="{{ google_application_credentials }}"
+        state: present
 
     - name: Configure Nginx
       template:
