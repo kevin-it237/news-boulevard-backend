@@ -1,0 +1,64 @@
+---
+- name: Deploy Node.js application with Nginx
+  hosts: ec2_instances
+  become: true
+  become_method: sudo
+  vars:
+    app_source_directory: "/home/ubuntu/your/node/app"  # Replace with your Node.js app directory
+    node_env: "production"
+    google_application_credentials: "/home/ubuntu/service-account.json"
+
+  tasks:
+    - name: Update the package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start Nginx service
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Install Node.js and npm
+      apt:
+        name:
+          - nodejs
+          - npm
+        state: present
+
+    - name: Install PM2 globally
+      npm:
+        name: pm2
+        global: yes
+
+    - name: Set env variable
+      shell:
+        cmd: |
+        export NODE_ENV="{{ node_env }}"
+        export GOOGLE_APPLICATION_CREDENTIALS="{{ google_application_credentials }}"
+      args:
+        executable: /bin/bash
+      become: false
+
+    - name: Configure Nginx
+      template:
+        src: nginx.conf.j2
+        dest: "/etc/nginx/nginx.conf"
+      notify:
+        - Restart Nginx
+
+  handlers:
+    - name: Restart Node.js application
+      systemd:
+        name: pm2-ecosystem
+        state: restarted
+
+    - name: Restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
