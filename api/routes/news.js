@@ -32,7 +32,12 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
   const page = parseInt(req.query.page) || 0;
   const limit = parseInt(req.query.limit) || 12;
   const result = {};
-  const totalPosts = await Post.countDocuments().exec();
+  let totalPosts = 0;
+  if (category) {
+    totalPosts = await Post.countDocuments(query).exec();
+  } else {
+    totalPosts = await Post.countDocuments().exec();
+  }
   let startIndex = page * limit;
   const endIndex = (page + 1) * limit;
   result.totalPosts = totalPosts;
