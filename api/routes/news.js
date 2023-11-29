@@ -62,7 +62,8 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
     .select(fields)
     .skip(startIndex)
     .limit(limit)
-    .sort({ datetime: -1 })
+    .sort([['_id', -1]])
+    //.sort({ datetime: -1 })
     .exec()
     .then((posts) => {
       result.items = posts;
@@ -102,7 +103,8 @@ router.get("/latest", authJwt.verifyToken, (req, res, next) => {
 
   Post.find()
     .select(fields)
-    .sort({ datetime: -1 })
+    //.sort({ datetime: -1 })
+    .sort([['_id', -1]])
     .limit(10)
     .exec()
     .then((posts) => {
