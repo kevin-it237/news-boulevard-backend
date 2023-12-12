@@ -61,9 +61,9 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
   Post.find(category ? query : {})
     .select(fields)
     .skip(startIndex)
-    .limit(limit)
     // .sort([['_id', -1]])
     .sort({ datetime: -1 })
+    .limit(limit)
     .exec()
     .then((posts) => {
       result.items = posts;
