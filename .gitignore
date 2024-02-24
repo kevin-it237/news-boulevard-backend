@@ -3,3 +3,4 @@ uploads/images/*
 !uploads/images/.gitkeep
 newsboulevard-server-key.pem
 service-account.json
+.DS_Store
