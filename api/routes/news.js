@@ -22,10 +22,10 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
   let fields = "";
   if (lang === "fr") {
     fields =
-      "title news_link image author category date datetime excerpt source";
+      "title news_link image author category content_summary date datetime excerpt source";
   } else {
     fields =
-      "title_en news_link image author category_en date datetime excerpt_en source";
+      "title_en news_link image author category_en content_summary_en date datetime excerpt_en source";
     query = { category_en: category };
   }
 
