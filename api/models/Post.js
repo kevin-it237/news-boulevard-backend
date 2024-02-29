@@ -19,6 +19,7 @@ const PostSchema = mongoose.Schema(
     md_content: { type: String, required: false },
     md_content_en: { type: String, required: false },
     raw_html_content: { type: String, required: false },
+    views: { type: Number, required: false },
     source: { type: String, required: false },
     updatedAt: { type: Date, required: false },
     createdAt: { type: Date, required: false },

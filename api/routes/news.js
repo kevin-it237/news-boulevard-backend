@@ -22,10 +22,10 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
   let fields = "";
   if (lang === "fr") {
     fields =
-      "title news_link image author category content_summary date datetime excerpt source";
+      "title news_link image author views category content_summary date datetime excerpt source";
   } else {
     fields =
-      "title_en news_link image author category_en content_summary_en date datetime excerpt_en source";
+      "title_en news_link image author views category_en content_summary_en date datetime excerpt_en source";
     query = { category_en: category };
   }
 
@@ -142,7 +142,7 @@ router.get("/:id", authJwt.verifyToken, async (req, res, next) => {
 
   // return english and french version
   let fields =
-    "title title_en news_link image author category_en category content_summary content_summary_en date datetime excerpt excerpt_en md_content md_content_en source updatedAt createdAt";
+    "title title_en news_link image author views category_en category content_summary content_summary_en date datetime excerpt excerpt_en md_content md_content_en source updatedAt createdAt";
 
   Post.findById(id)
     .select(fields)
@@ -164,7 +164,7 @@ router.get("/:id", authJwt.verifyToken, async (req, res, next) => {
     });
 });
 
-// Get news
+// Search news
 router.post("/search", authJwt.verifyToken, async (req, res, next) => {
   const lang = req.query.lang;
   const queryData = req.body.query;
@@ -211,6 +211,29 @@ router.post("/search", authJwt.verifyToken, async (req, res, next) => {
         data: posts,
       });
     });
+});
+
+// increment post views 
+router.put("/:id/increment-views", authJwt.verifyToken, async (req, res, next) => {
+  const postId = req.params.id;
+
+  try {
+    // Find the Post by ID and increment the views
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { $inc: { views: 1 } }, // Increment views by 1
+      { new: false } // Return the modified document
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    return res.json({ message: 'Views incremented successfully', data: {} });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
 module.exports = router;
