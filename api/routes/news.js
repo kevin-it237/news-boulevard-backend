@@ -7,7 +7,7 @@ const Post = require("../models/Post");
 router.get("/", authJwt.verifyToken, async (req, res, next) => {
   const category = req.query.category;
   const lang = req.query.lang;
-  let query = { category };
+  let query = { category: { $regex: category, $options: 'i' } };
 
   if (!lang)
     return res.status(403).json({
@@ -26,7 +26,7 @@ router.get("/", authJwt.verifyToken, async (req, res, next) => {
   } else {
     fields =
       "title_en news_link image author views category_en content_summary_en date datetime excerpt_en source";
-    query = { category_en: category };
+    query = { category_en: { $regex: category, $options: 'i' } };
   }
 
   const page = parseInt(req.query.page) || 0;
@@ -104,7 +104,7 @@ router.get("/latest", authJwt.verifyToken, (req, res, next) => {
   Post.find()
     .select(fields)
     .sort({ datetime: -1 })
-    // .sort([['_id', -1]])
+    // .sort({ views: -1 })
     .limit(10)
     .exec()
     .then((posts) => {
